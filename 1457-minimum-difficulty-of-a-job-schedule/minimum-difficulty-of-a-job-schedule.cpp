@@ -18,13 +18,7 @@ int f(int i,int c,int k,vector<int>&nums,vector<vector<int>>&dp)
     for(int j=i;j<n;j++)
     {
         mx=max(mx,nums[j]);
-        int tk1=0;
-        //  if(j==n-1&&c!=k-1)
-        // tk1=1e9;
-        // else if(c+1<k)
-        tk1=f(j+1,c+1,k,nums,dp);
-       
-        tk=min(tk,mx+tk1);
+        tk=min(tk,mx+f(j+1,c+1,k,nums,dp));
     }
     return dp[i][c]=tk;
 }
