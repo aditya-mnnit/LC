@@ -1,41 +1,45 @@
 class Solution {
 public:
 
-    int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {
-        
-        // adj.resize(n);
-        vector<vector<vector<int>>>adj(n);
+    int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int K) {
+           vector<vector<pair<int,int>>>adj(n);
         for(int i=0;i<flights.size();i++)
         {
             adj[flights[i][0]].push_back({flights[i][1],flights[i][2]});
-
         }
+        // queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>>pq;
+        queue<pair<int,int>>pq;
+        pq.push({0,src});
         vector<int>dis(n,1e9);
-        set<vector<int>>st;
-        st.insert({0,0,src});
-    while(!st.empty())
-    {
-        vector<int>x=*st.begin();
-         st.erase(x);
-        int el=x[2];
-        int d=x[1];
-        int c=x[0];
-        if(c>k)
-        continue;
-        for(auto it:adj[el])
+        int k=-1;
+        while(!pq.empty())
         {
-            if(d+it[1]<dis[it[0]]&&c<=k)
+            if(k==K)
+            break;
+            int s=pq.size();
+            while(s--)
             {
-                // cout<<el<<" "<<it[0]<<"\n";
-                dis[it[0]]=min(dis[it[0]],d+it[1]);
-                st.insert({c+1,dis[it[0]],it[0]});
+                auto it=pq.front();
+            pq.pop();
+            int d=it.first;
+            int ele=it.second;
+            for(auto x:adj[ele])
+            {
+                if(d+x.second<dis[x.first])
+                {
+                    dis[x.first]=d+x.second;
+                    pq.push({dis[x.first],x.first});
+                }
             }
-        
+            }
+            k++;
         }
-       
-    }
-    if(dis[dst]==1e9)
-    return -1;
-    return dis[dst];
+        if(dis[dst]==1e9)
+        dis[dst]=-1;
+        return dis[dst];
+      
+      
+      
+      
     }
 };
